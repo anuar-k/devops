@@ -1,0 +1,32 @@
+FROM gradle:8.10.1-jdk21-alpine
+
+RUN apk update \
+    && apk upgrade \
+    && apk add netcat-openbsd \
+    && apk add curl \
+    && apk add --no-cache fontconfig ttf-dejavu \
+    && apk add --no-cache python3 \
+    && apk add --no-cache git
+
+# install kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+    && chmod +x ./kubectl \
+    && mv ./kubectl /usr/local/bin
+
+# install helm
+RUN curl -LO https://get.helm.sh/helm-v3.15.3-linux-amd64.tar.gz && \
+    tar -zxvf helm-v3.15.3-linux-amd64.tar.gz && \
+    chmod +x linux-amd64/helm && \
+    mv linux-amd64/helm /usr/local/bin/helm && \
+    rm -rf helm-v3.15.3-linux-amd64.tar.gz linux-amd64
+
+# install helm-diff
+RUN helm plugin install https://github.com/databus23/helm-diff
+
+# install helmfile
+RUN curl -LO https://github.com/helmfile/helmfile/releases/download/v0.167.0/helmfile_0.167.0_linux_amd64.tar.gz && \
+    tar -zxvf helmfile_0.167.0_linux_amd64.tar.gz && \
+    chmod +x helmfile && \
+    mv helmfile /usr/local/bin/helmfile && \
+    rm -rf helmfile_0.167.0_linux_amd64.tar.g
+
