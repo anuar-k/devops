@@ -1,0 +1,9 @@
+FROM eclipse-temurin:21.0.4_7-jre-alpine
+
+RUN apk update \
+    && apk upgrade \
+    && apk add netcat-openbsd
+RUN apk add curl
+RUN apk add neovim
+RUN apk add inetutils-telnet
+RUN apk add --no-cache fontconfig ttf-dejavu
