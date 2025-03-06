@@ -1,0 +1,18 @@
+FROM openresty/openresty:1.25.3.1-5-bullseye-fat-amd64
+
+# Install required packages
+RUN apt-get update && apt-get install -y \
+    curl git wget build-essential luarocks \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install neovim
+RUN wget https://github.com/neovim/neovim/releases/download/v0.10.0/nvim-linux64.tar.gz -P /opt
+RUN cd /opt && tar -xzvf nvim-linux64.tar.gz
+RUN ln -s /opt/nvim-linux64/bin/nvim /usr/bin/nvim
+
+# Install LazyVim
+RUN git clone https://github.com/LazyVim/starter ~/.config/nvim
+RUN nvim --headless +qall
+
+# Install lua json
+RUN luarocks install lua-cjson
